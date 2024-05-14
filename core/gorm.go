@@ -20,8 +20,7 @@ func InitGorm() *gorm.DB {
 	// MySQL 日志记录器
 	var mysqlLogger logger.Interface
 
-	if global.GVB_CONFIG.System.Env == "info" {
-		//显示所有sql
+	if global.GVB_CONFIG.Mysql.LogMode == "info" {
 		// logger.Default是一个实现了 logger.Interface 接口的日志记录器对象。
 		mysqlLogger = logger.Default.LogMode(logger.Info)
 	} else {

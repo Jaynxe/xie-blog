@@ -1,2 +1,6 @@
 [INFO] 2024-05-14 09:42:23 [gorm.go:43] mysql数据库连接成功 
 [INFO] 2024-05-14 09:42:23 [main.go:14] hello world 
+[INFO] 2024-05-14 09:59:01 [gorm.go:42] mysql数据库连接成功 
+[INFO] 2024-05-14 09:59:01 [main.go:15] hello world 
+[GVB] [INFO] 2024-05-14 10:00:15 [gorm.go:42] mysql数据库连接成功 
+[GVB] [INFO] 2024-05-14 10:00:15 [main.go:15] hello world 

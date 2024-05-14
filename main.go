@@ -6,8 +6,9 @@ import (
 )
 
 func init() {
-	core.InitLogWithLevel("log")
 	core.InitConfig()
+	core.InitLogWithLevel("log")
+	
 	core.InitGorm()
 }
 func main() {

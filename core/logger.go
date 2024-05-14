@@ -12,7 +12,9 @@ import (
 	"github.com/Jaynxe/xie-blog/global"
 	"github.com/sirupsen/logrus"
 )
-var logLevels = []logrus.Level{logrus.InfoLevel,logrus.WarnLevel,logrus.ErrorLevel,logrus.FatalLevel}
+
+var logLevels = []logrus.Level{logrus.InfoLevel, logrus.WarnLevel, logrus.ErrorLevel, logrus.FatalLevel}
+
 type logLevelWriter struct {
 	files    map[logrus.Level]*os.File
 	logPath  string
@@ -30,7 +32,7 @@ func (s *LogFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 		file = filepath.Base(entry.Caller.File)
 		len = entry.Caller.Line
 	}
-	msg := fmt.Sprintf("[%s] %s [%s:%d] %s \n", strings.ToUpper(entry.Level.String()),
+	msg := fmt.Sprintf("%s [%s] %s [%s:%d] %s \n",s.Prefix, strings.ToUpper(entry.Level.String()),
 		timeStamp, file, len, entry.Message)
 	return []byte(msg), nil
 }
@@ -112,9 +114,17 @@ func InitLogWithLevel(logPath string) {
 	log.AddHook(fileWriter)
 	// 设置报告调用者
 	log.SetReportCaller(true)
-
 	// 设置格式化器
 	log.SetFormatter(&LogFormatter{Prefix: "[GVB]"})
+
+	switch global.GVB_CONFIG.Logger.Level {
+	case "info":
+		log.SetLevel(logrus.InfoLevel)
+	case "error":
+		log.SetLevel(logrus.ErrorLevel)
+	case "warn":
+		log.SetLevel(logrus.WarnLevel)
+	}
 
 	global.GVB_LOGGER = log
 }

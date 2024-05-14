@@ -5,6 +5,7 @@ mysql:
   username: root
   password: "@xjy158191"
   config: charset=utf8mb4&parseTime=True&loc=Local
+  # gorm的日志模式
   log-mode: error
 
 system:
@@ -13,6 +14,7 @@ system:
   env: info
 
 logger:
+  # 全局log的级别
   level: info
   prefix: "[GVB]"
   director: log
