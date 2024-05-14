@@ -1,13 +1,15 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/Jaynxe/xie-blog/core"
 	"github.com/Jaynxe/xie-blog/global"
 )
 
-func main() {
+func init() {
+	core.InitLogWithLevel("log")
 	core.InitConfig()
-	fmt.Printf("global.GVB_CONFIG: %v\n", global.GVB_CONFIG)
+	core.InitGorm()
+}
+func main() {
+	global.GVB_LOGGER.Info("hello world")
 }

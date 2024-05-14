@@ -4,12 +4,13 @@ mysql:
   db: xie-blog
   username: root
   password: "@xjy158191"
-  log-level: error
+  config: charset=utf8mb4&parseTime=True&loc=Local
+  log-mode: error
 
 system:
   host: "0.0.0.0"
   port: 8888
-  env: local
+  env: info
 
 logger:
   level: info
