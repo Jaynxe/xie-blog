@@ -1,0 +1,1519 @@
+basePath: /
+definitions:
+  ctype.ImageStoreType:
+    enum:
+    - 1
+    - 2
+    type: integer
+    x-enum-comments:
+      Local: 存储在本地图片
+      QiNiuYun: 存储在七牛云的图片
+    x-enum-varnames:
+    - Local
+    - QiNiuYun
+  errhandle.ErrCode:
+    enum:
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+    - 9
+    - 10
+    - 11
+    - 12
+    - 13
+    - 14
+    - 15
+    type: integer
+    x-enum-varnames:
+    - NoError
+    - InnerError
+    - TokenError
+    - ParamsError
+    - UserExists
+    - UserNonExists
+    - PasswordInvalid
+    - PermissionDenied
+    - SexError
+    - NameExists
+    - EmailFormatError
+    - PasswordTooShort
+    - FileSizeTooLarge
+    - FileTypeNoMatch
+    - VerifyCodeError
+    - OtherError
+  model.Article:
+    properties:
+      category_id:
+        type: integer
+      comment_count:
+        description: 评论数
+        type: integer
+      comments:
+        items:
+          $ref: '#/definitions/model.Comment'
+        type: array
+      content:
+        type: string
+      id:
+        type: integer
+      image:
+        allOf:
+        - $ref: '#/definitions/model.Image'
+        description: 文章的封面
+      image_id:
+        type: integer
+      like_count:
+        description: 点赞数
+        type: integer
+      look_count:
+        description: 浏览量
+        type: integer
+      tags:
+        items:
+          $ref: '#/definitions/model.Tag'
+        type: array
+      title:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  model.Comment:
+    properties:
+      article_id:
+        type: integer
+      content:
+        type: string
+      id:
+        type: integer
+      user:
+        $ref: '#/definitions/model.User'
+      user_id:
+        type: integer
+    type: object
+  model.CommonResponse-any:
+    properties:
+      data: {}
+      msg:
+        type: string
+      reason:
+        type: string
+      status:
+        $ref: '#/definitions/errhandle.ErrCode'
+    type: object
+  model.CommonResponse-array_model_Image:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/model.Image'
+        type: array
+      msg:
+        type: string
+      reason:
+        type: string
+      status:
+        $ref: '#/definitions/errhandle.ErrCode'
+    type: object
+  model.CommonResponse-array_model_ImageResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/model.ImageResponse'
+        type: array
+      msg:
+        type: string
+      reason:
+        type: string
+      status:
+        $ref: '#/definitions/errhandle.ErrCode'
+    type: object
+  model.CommonResponse-array_model_MenuItem:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/model.MenuItem'
+        type: array
+      msg:
+        type: string
+      reason:
+        type: string
+      status:
+        $ref: '#/definitions/errhandle.ErrCode'
+    type: object
+  model.CommonResponse-array_model_Tag:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/model.Tag'
+        type: array
+      msg:
+        type: string
+      reason:
+        type: string
+      status:
+        $ref: '#/definitions/errhandle.ErrCode'
+    type: object
+  model.CommonResponse-array_model_User:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/model.User'
+        type: array
+      msg:
+        type: string
+      reason:
+        type: string
+      status:
+        $ref: '#/definitions/errhandle.ErrCode'
+    type: object
+  model.CommonResponse-model_GetUserResponse:
+    properties:
+      data:
+        $ref: '#/definitions/model.GetUserResponse'
+      msg:
+        type: string
+      reason:
+        type: string
+      status:
+        $ref: '#/definitions/errhandle.ErrCode'
+    type: object
+  model.CommonResponse-model_MenuItem:
+    properties:
+      data:
+        $ref: '#/definitions/model.MenuItem'
+      msg:
+        type: string
+      reason:
+        type: string
+      status:
+        $ref: '#/definitions/errhandle.ErrCode'
+    type: object
+  model.CommonResponse-model_Tag:
+    properties:
+      data:
+        $ref: '#/definitions/model.Tag'
+      msg:
+        type: string
+      reason:
+        type: string
+      status:
+        $ref: '#/definitions/errhandle.ErrCode'
+    type: object
+  model.CommonResponse-model_TokenResponse:
+    properties:
+      data:
+        $ref: '#/definitions/model.TokenResponse'
+      msg:
+        type: string
+      reason:
+        type: string
+      status:
+        $ref: '#/definitions/errhandle.ErrCode'
+    type: object
+  model.CommonResponse-string:
+    properties:
+      data:
+        type: string
+      msg:
+        type: string
+      reason:
+        type: string
+      status:
+        $ref: '#/definitions/errhandle.ErrCode'
+    type: object
+  model.DelIdListRequest:
+    properties:
+      id_list:
+        items:
+          type: integer
+        type: array
+    required:
+    - id_list
+    type: object
+  model.GetUserResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      nick_name:
+        type: string
+      sex:
+        type: string
+    type: object
+  model.Image:
+    properties:
+      hash:
+        description: 判断图片是否重复
+        type: string
+      id:
+        type: integer
+      image_store_type:
+        $ref: '#/definitions/ctype.ImageStoreType'
+      name:
+        type: string
+      url:
+        type: string
+    type: object
+  model.ImageResponse:
+    properties:
+      file_path:
+        type: string
+      is_succeed:
+        type: boolean
+      upload_status:
+        type: string
+    type: object
+  model.ImageUpdateRequest:
+    properties:
+      id:
+        description: 必传
+        type: integer
+      name:
+        type: string
+    required:
+    - id
+    - name
+    type: object
+  model.LoginWithEmailRequest:
+    properties:
+      code:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    type: object
+  model.MenuItem:
+    properties:
+      children:
+        description: 子菜单项列表
+        items:
+          $ref: '#/definitions/model.MenuItem'
+        type: array
+      id:
+        type: integer
+      parent_id:
+        description: 父菜单项ID，用于构建多级菜单
+        type: integer
+      sort:
+        description: 菜单的排序
+        type: integer
+      title:
+        description: 菜单项标题
+        type: string
+      url:
+        description: 菜单项链接
+        type: string
+    type: object
+  model.MenuRequest:
+    properties:
+      parent_id:
+        type: integer
+      sort:
+        type: integer
+      title:
+        type: string
+      url:
+        type: string
+    required:
+    - sort
+    - title
+    - url
+    type: object
+  model.ModifyPasswordRequest:
+    properties:
+      id:
+        type: integer
+      new_pwb:
+        type: string
+      old_pwd:
+        type: string
+    type: object
+  model.ModifyUserRequest:
+    properties:
+      avatar:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      nick_name:
+        type: string
+      sex:
+        type: string
+    type: object
+  model.RegisterUserRequest:
+    properties:
+      avatar:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      nick_name:
+        type: string
+      password:
+        type: string
+      sex:
+        type: string
+    type: object
+  model.Tag:
+    properties:
+      articles:
+        items:
+          $ref: '#/definitions/model.Article'
+        type: array
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  model.TagRequest:
+    properties:
+      Name:
+        type: string
+    required:
+    - Name
+    type: object
+  model.TokenResponse:
+    properties:
+      expiredAt:
+        type: integer
+      refresh_token:
+        type: string
+      scope:
+        type: string
+      token:
+        type: string
+    type: object
+  model.User:
+    properties:
+      articles:
+        items:
+          $ref: '#/definitions/model.Article'
+        type: array
+      avatar:
+        description: 头像地址
+        type: string
+      collect_articles:
+        items:
+          $ref: '#/definitions/model.Article'
+        type: array
+      email:
+        type: string
+      id:
+        type: integer
+      ip:
+        type: string
+      name:
+        type: string
+      nick_name:
+        type: string
+      password:
+        type: string
+      role:
+        description: 权限(管理员，普通用户)
+        type: string
+      sex:
+        type: string
+    type: object
+  model.UserIDOnlyRequest:
+    properties:
+      id:
+        type: integer
+    type: object
+  model.UserLoginRequest:
+    properties:
+      name:
+        type: string
+      password:
+        type: string
+    required:
+    - name
+    - password
+    type: object
+host: 127.0.0.1:8888
+info:
+  contact: {}
+  description: 使用gin+vue进行开发的博客平台
+  title: Gin-Vue-Blog Swagger API接口文档
+  version: v1.0.0
+paths:
+  /allArticles:
+    get:
+      consumes:
+      - application/json
+      description: 获取所有文章
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-model_GetUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 获取所有文章
+      tags:
+      - auth
+  /authrequired/addMenu:
+    post:
+      consumes:
+      - application/json
+      description: 创建菜单
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 菜单的内容
+        in: body
+        name: MenuRequest
+        required: true
+        schema:
+          $ref: '#/definitions/model.MenuRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-array_model_MenuItem'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 创建菜单
+      tags:
+      - menu
+  /authrequired/addTag:
+    post:
+      consumes:
+      - application/json
+      description: 创建标签
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 标签的内容
+        in: body
+        name: TagRequest
+        required: true
+        schema:
+          $ref: '#/definitions/model.TagRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-array_model_Tag'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 创建标签
+      tags:
+      - Tag
+  /authrequired/admin/admin/new:
+    post:
+      consumes:
+      - application/json
+      description: 注册管理员
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 用户注册信息
+        in: body
+        name: registerInfo
+        required: true
+        schema:
+          $ref: '#/definitions/model.RegisterUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 注册管理员
+      tags:
+      - admin
+  /authrequired/admin/deleteAdmin:
+    delete:
+      consumes:
+      - application/json
+      description: 删除指定管理员
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 需要删除的管理员ID
+        in: body
+        name: DeleteUser
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserIDOnlyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 删除指定管理员
+      tags:
+      - admin
+  /authrequired/admin/deleteUser:
+    delete:
+      consumes:
+      - application/json
+      description: 删除指定用户
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 需要删除的用户ID
+        in: body
+        name: DeleteUser
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserIDOnlyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 删除指定用户
+      tags:
+      - admin
+  /authrequired/admin/getAllUsers:
+    get:
+      consumes:
+      - application/json
+      description: 获取所有用户
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-array_model_User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 获取所有用户
+      tags:
+      - admin
+  /authrequired/admin/modifyAdmin:
+    patch:
+      consumes:
+      - application/json
+      description: 修改指定管理员信息
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 要修改的管理员的信息
+        in: body
+        name: ModifyUserRequest
+        required: true
+        schema:
+          $ref: '#/definitions/model.ModifyUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 修改指定管理员信息
+      tags:
+      - admin
+  /authrequired/admin/modifyAdminPassword:
+    patch:
+      consumes:
+      - application/json
+      description: 修改指定管理员密码
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: id,新密码
+        in: body
+        name: ModifyPasswordRequest
+        required: true
+        schema:
+          $ref: '#/definitions/model.ModifyPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 修改指定管理员密码
+      tags:
+      - admin
+  /authrequired/admin/modifyUser:
+    patch:
+      consumes:
+      - application/json
+      description: 修改指定用户信息
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 要修改的用户的信息
+        in: body
+        name: ModifyUserRequest
+        required: true
+        schema:
+          $ref: '#/definitions/model.ModifyUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 修改指定用户信息
+      tags:
+      - admin
+  /authrequired/admin/modifyUserPassword:
+    patch:
+      consumes:
+      - application/json
+      description: 修改指定用户密码
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: id,新密码
+        in: body
+        name: ModifyPasswordRequest
+        required: true
+        schema:
+          $ref: '#/definitions/model.ModifyPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 修改指定用户密码
+      tags:
+      - admin
+  /authrequired/admin/paginatedUsers:
+    get:
+      consumes:
+      - application/json
+      description: 分页获取用户
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 搜索关键字
+        in: query
+        name: key
+        type: string
+      - description: 每页大小
+        in: query
+        name: limit
+        type: integer
+      - description: 排序规则
+        in: query
+        name: sort
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-array_model_User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 分页获取用户
+      tags:
+      - admin
+  /authrequired/deleteImages:
+    delete:
+      consumes:
+      - application/json
+      description: 删除图片
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 删除图片id列表
+        in: body
+        name: DelIdListRequest
+        required: true
+        schema:
+          $ref: '#/definitions/model.DelIdListRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-string'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 删除图片
+      tags:
+      - image
+  /authrequired/deleteMenu:
+    delete:
+      consumes:
+      - application/json
+      description: 删除菜单
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 要删除的菜单id列表
+        in: body
+        name: DelIdListRequest
+        required: true
+        schema:
+          $ref: '#/definitions/model.DelIdListRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-string'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 删除菜单
+      tags:
+      - menu
+  /authrequired/deleteTag:
+    delete:
+      consumes:
+      - application/json
+      description: 删除标签
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 要删除的标签id列表
+        in: body
+        name: DelIdListRequest
+        required: true
+        schema:
+          $ref: '#/definitions/model.DelIdListRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-string'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 删除标签
+      tags:
+      - Tag
+  /authrequired/getAllImages:
+    get:
+      consumes:
+      - application/json
+      description: 获取所有图片
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-array_model_Image'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 获取所有图片
+      tags:
+      - image
+  /authrequired/getAllTags:
+    get:
+      consumes:
+      - application/json
+      description: 获取所有标签
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-array_model_Tag'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 获取所有标签
+      tags:
+      - Tag
+  /authrequired/getMenu/{id}:
+    get:
+      consumes:
+      - application/json
+      description: 获取指定菜单
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Menu id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-model_MenuItem'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 获取指定菜单
+      tags:
+      - menu
+  /authrequired/getTag/{id}:
+    get:
+      consumes:
+      - application/json
+      description: 获取指定标签
+      parameters:
+      - description: Tag id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-model_Tag'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 获取指定标签
+      tags:
+      - Tag
+  /authrequired/paginatedImages:
+    get:
+      consumes:
+      - application/json
+      description: 分页获取图片
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 搜索关键字
+        in: query
+        name: key
+        type: string
+      - description: 每页大小
+        in: query
+        name: limit
+        type: integer
+      - description: 排序规则
+        in: query
+        name: sort
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-array_model_Image'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 分页获取图片
+      tags:
+      - image
+  /authrequired/paginatedTags:
+    get:
+      consumes:
+      - application/json
+      description: 分页获取标签
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 搜索关键字
+        in: query
+        name: key
+        type: string
+      - description: 每页大小
+        in: query
+        name: limit
+        type: integer
+      - description: 排序规则
+        in: query
+        name: sort
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-array_model_Tag'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 分页获取标签
+      tags:
+      - Tag
+  /authrequired/updateImage:
+    patch:
+      consumes:
+      - application/json
+      description: 更新图片名称
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 图片ID和新名称
+        in: body
+        name: ImageUpdateInfo
+        required: true
+        schema:
+          $ref: '#/definitions/model.ImageUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-string'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 更新图片名称
+      tags:
+      - image
+  /authrequired/updateMenu/{id}:
+    patch:
+      consumes:
+      - application/json
+      description: 更新指定菜单
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Menu id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 要更新的菜单内容
+        in: body
+        name: MenuRequest
+        required: true
+        schema:
+          $ref: '#/definitions/model.MenuRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-string'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 更新指定菜单
+      tags:
+      - menu
+  /authrequired/updateTag/{id}:
+    patch:
+      consumes:
+      - application/json
+      description: 更新指定标签
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Tag id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 要更新的标签内容
+        in: body
+        name: TagRequest
+        required: true
+        schema:
+          $ref: '#/definitions/model.TagRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-string'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 更新指定标签
+      tags:
+      - Tag
+  /authrequired/uploadImages:
+    post:
+      consumes:
+      - application/json
+      description: 文件上传
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 要上传的文件
+        in: formData
+        name: uploadfile
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-array_model_ImageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 文件上传
+      tags:
+      - image
+  /authrequired/user/deleteUser:
+    delete:
+      consumes:
+      - application/json
+      description: 用户删除
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-string'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 用户删除
+      tags:
+      - user
+  /authrequired/user/getUserInfo:
+    get:
+      consumes:
+      - application/json
+      description: 获取当前用户信息
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-string'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 获取当前用户信息
+      tags:
+      - user
+  /authrequired/user/logout:
+    post:
+      consumes:
+      - application/json
+      description: 用户注销
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-string'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 用户注销
+      tags:
+      - user
+  /authrequired/user/modifyUser:
+    patch:
+      consumes:
+      - application/json
+      description: 修改用户信息
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 要修改的用户的信息
+        in: body
+        name: ModifyUserRequest
+        required: true
+        schema:
+          $ref: '#/definitions/model.ModifyUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 修改用户信息
+      tags:
+      - user
+  /authrequired/user/modifyUserPassword:
+    patch:
+      consumes:
+      - application/json
+      description: 修改用户密码
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: id,新密码
+        in: body
+        name: ModifyPasswordRequest
+        required: true
+        schema:
+          $ref: '#/definitions/model.ModifyPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 修改用户密码
+      tags:
+      - user
+  /getAllMenus:
+    get:
+      consumes:
+      - application/json
+      description: 获取所有菜单
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-array_model_MenuItem'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 获取所有菜单
+      tags:
+      - auth
+  /isvalid:
+    get:
+      consumes:
+      - application/json
+      description: 是否登录
+      parameters:
+      - description: 登录返回的Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-model_GetUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 是否登录
+      tags:
+      - auth
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: 用户名密码登录
+      parameters:
+      - description: 用户名, 密码
+        in: body
+        name: userInfo
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-model_TokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 用户名密码登录
+      tags:
+      - auth
+  /loginWithEmail:
+    post:
+      consumes:
+      - application/json
+      description: 邮箱登录
+      parameters:
+      - description: 邮箱, 密码, 验证码
+        in: body
+        name: LoginWithEmailRequest
+        required: true
+        schema:
+          $ref: '#/definitions/model.LoginWithEmailRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-model_TokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 邮箱登录
+      tags:
+      - auth
+  /refresh:
+    post:
+      consumes:
+      - application/json
+      description: 刷新登录令牌
+      parameters:
+      - description: 用户Refresh Token
+        in: header
+        name: Authorization
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-model_TokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 刷新登录令牌
+      tags:
+      - auth
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: 注册普通用户
+      parameters:
+      - description: 用户注册信息
+        in: body
+        name: registerInfo
+        required: true
+        schema:
+          $ref: '#/definitions/model.RegisterUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-string'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 注册普通用户
+      tags:
+      - auth
+swagger: "2.0"

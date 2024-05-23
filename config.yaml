@@ -4,19 +4,65 @@ mysql:
   db: xie-blog
   username: root
   password: "@xjy158191"
-  config: charset=utf8mb4&parseTime=True&loc=Local
-  # gorm的日志模式
-  log-mode: error
+  config: "charset=utf8mb4&parseTime=True&loc=Local"
+  log-mode: error # gorm的日志模式
 
 system:
   host: "0.0.0.0"
   port: 8888
-  env: info
+  env: "production" #gin服务的运行模式 production | development
 
 logger:
-  # 全局log的级别
-  level: info
+  level: info   # 全局log的级别
   prefix: "[GVB]"
   director: log
-  show-line: true
+  show-line: true #是否显示行号
   log-in-console: true
+
+redis:
+  ip: 127.0.0.1
+  port: 6379
+  password: 158191xjy
+  pool-size: 100
+  db-name: 0
+
+# jwt configuration
+jwt:
+  expires-time: 7d
+  buffer-time: 1d
+  issuer: xiean
+  signing-method: jwt.SigningMethodHS256
+
+# local configuration
+local:
+  size: 10
+  path: uploads/file
+  store-path: uploads/file
+
+# qiniu configuration (请自行七牛申请对应的 公钥 私钥 bucket 和 域名地址)
+qiniu:
+    enable: true #是否上传七牛云
+    access_key: Wd11biHm1Z4Iqqqy_72fFXD8VAEEhtn1lZfiY_OH
+    secret_key: xh-_XguHgJ8X441Gf411ed9Hq4C6wnJ1A0SfAe8K
+    bucket: xiean173
+    cdn: s7hoymgii.hn-bkt.clouddn.com/
+    zone: z2 #华南
+    size: 5
+    prefix: gvb
+    use-https: false
+    use-cdn-domains: false
+
+# email configuration
+email:
+  host: smtp.qq.com 
+  port: 465
+  senderEmail: 3187837714@qq.com #发件人邮箱
+  password: eyswqhamukuideeg     #smtp服务授权码
+  default-from-email: jaynex.cn  #默认发件人名字
+  use_ssl: false
+  user_tls: false
+
+qq:
+  app_id: ""
+  key: ""
+  redirect: http://127.0.0.1:3000/login?flag=qq

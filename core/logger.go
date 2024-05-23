@@ -4,6 +4,7 @@ package core
 import (
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -21,7 +22,6 @@ type logLevelWriter struct {
 	fileDate string
 }
 type LogFormatter struct {
-	Prefix string
 }
 
 func (s *LogFormatter) Format(entry *logrus.Entry) ([]byte, error) {
@@ -32,8 +32,14 @@ func (s *LogFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 		file = filepath.Base(entry.Caller.File)
 		len = entry.Caller.Line
 	}
-	msg := fmt.Sprintf("%s [%s] %s [%s:%d] %s \n",s.Prefix, strings.ToUpper(entry.Level.String()),
-		timeStamp, file, len, entry.Message)
+	var msg string
+	if global.GVB_CONFIG.Logger.ShowLine {
+		msg = fmt.Sprintf("%s [%s] %s [%s:%d] %s \n", global.GVB_CONFIG.Logger.Prefix, strings.ToUpper(entry.Level.String()),
+			timeStamp, file, len, entry.Message)
+	} else {
+		msg = fmt.Sprintf("%s [%s] %s %s \n", global.GVB_CONFIG.Logger.Prefix, strings.ToUpper(entry.Level.String()),
+			timeStamp, entry.Message)
+	}
 	return []byte(msg), nil
 }
 
@@ -49,7 +55,6 @@ func (p *logLevelWriter) Fire(entry *logrus.Entry) error {
 		return errors.New("LogFileWriter is nil")
 	}
 	// 获取日志级别
-
 	level := entry.Level
 	// 根据日志级别选择对应的文件写入器
 	file, ok := p.files[level]
@@ -82,7 +87,7 @@ func (p *logLevelWriter) Fire(entry *logrus.Entry) error {
 	return nil
 }
 
-func InitLogWithLevel(logPath string) {
+func InitLog() {
 	log := logrus.New()
 
 	// 创建不同级别的日志文件，并初始化写入器
@@ -90,12 +95,12 @@ func InitLogWithLevel(logPath string) {
 
 	for _, level := range logLevels {
 		fileDate := time.Now().Format("2006-01-02")
-		err := os.MkdirAll(fmt.Sprintf("%s/%s", logPath, fileDate), os.ModePerm)
+		err := os.MkdirAll(fmt.Sprintf("%s/%s", global.GVB_CONFIG.Logger.Director, fileDate), os.ModePerm)
 		if err != nil {
 			log.Error(err)
 			return
 		}
-		fileName := fmt.Sprintf("%s/%s/%s.log", logPath, fileDate, strings.ToLower(level.String()))
+		fileName := fmt.Sprintf("%s/%s/%s.log", global.GVB_CONFIG.Logger.Director, fileDate, strings.ToLower(level.String()))
 		file, err := os.OpenFile(fileName, os.O_CREATE|os.O_APPEND|os.O_RDWR, 0666)
 		if err != nil {
 			log.Error(err)
@@ -107,24 +112,23 @@ func InitLogWithLevel(logPath string) {
 	// 创建日志文件写入器
 	fileWriter := &logLevelWriter{
 		files:    writers,
-		logPath:  logPath,
+		logPath:  global.GVB_CONFIG.Logger.Director,
 		fileDate: time.Now().Format("2006-01-02"),
 	}
 
+	// 添加日志钩子
 	log.AddHook(fileWriter)
 	// 设置报告调用者
 	log.SetReportCaller(true)
 	// 设置格式化器
-	log.SetFormatter(&LogFormatter{Prefix: "[GVB]"})
+	log.SetFormatter(&LogFormatter{})
 
-	switch global.GVB_CONFIG.Logger.Level {
-	case "info":
-		log.SetLevel(logrus.InfoLevel)
-	case "error":
-		log.SetLevel(logrus.ErrorLevel)
-	case "warn":
-		log.SetLevel(logrus.WarnLevel)
+	// 设置日志级别
+	level, _ := logrus.ParseLevel(global.GVB_CONFIG.Logger.Level)
+	log.SetLevel(level)
+	// 是否禁用控制台输出
+	if !global.GVB_CONFIG.Logger.LogInConsole {
+		log.SetOutput(io.Discard)
 	}
-
 	global.GVB_LOGGER = log
 }

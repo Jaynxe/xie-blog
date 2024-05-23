@@ -10,7 +10,7 @@ import (
 )
 
 // 读取配置文件
-func InitConfig() {
+func InitConfig(){
 	const configFile = "config.yaml"
 	c := &config.Config{}
 	ConfigData, err := os.ReadFile(configFile)
