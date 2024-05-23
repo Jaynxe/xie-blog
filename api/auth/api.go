@@ -248,7 +248,7 @@ func (s *Auth) UserRegister(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} model.CommonResponse[model.GetUserResponse]
 // @Failure 400  {object} model.CommonResponse[any]
-// @Router /allArticles [get]
+// @Router /getallArticles [get]
 func (a *Auth) GetAllArticles(c *gin.Context) {
 	var allArticles []model.Article
 

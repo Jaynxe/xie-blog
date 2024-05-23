@@ -451,25 +451,6 @@ info:
   title: Gin-Vue-Blog Swagger API接口文档
   version: v1.0.0
 paths:
-  /allArticles:
-    get:
-      consumes:
-      - application/json
-      description: 获取所有文章
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.CommonResponse-model_GetUserResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/model.CommonResponse-any'
-      summary: 获取所有文章
-      tags:
-      - auth
   /authrequired/addMenu:
     post:
       consumes:
@@ -1387,6 +1368,25 @@ paths:
           schema:
             $ref: '#/definitions/model.CommonResponse-any'
       summary: 获取所有菜单
+      tags:
+      - auth
+  /getallArticles:
+    get:
+      consumes:
+      - application/json
+      description: 获取所有文章
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse-model_GetUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.CommonResponse-any'
+      summary: 获取所有文章
       tags:
       - auth
   /isvalid:
