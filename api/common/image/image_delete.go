@@ -2,6 +2,7 @@ package image
 
 import (
 	"fmt"
+	"github.com/Jaynxe/xie-blog/utils/errhandle"
 
 	"github.com/Jaynxe/xie-blog/global"
 	"github.com/Jaynxe/xie-blog/model"
@@ -9,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 删除图片 godoc
+// ImageDelete 删除图片 godoc
 // @Summary 删除图片
 // @Schemes
 // @Description 删除图片
@@ -32,7 +33,7 @@ func (i *Image) ImageDelete(c *gin.Context) {
 	//根据id列表查找要删除的数据
 	affectedNum := global.GVB_DB.Find(&imageList, mi.IdList).RowsAffected
 	if affectedNum == 0 {
-		model.ThrowError(c, err)
+		model.Throw(c, errhandle.ImageNotExists)
 		return
 	}
 	err = global.GVB_DB.Delete(&imageList).Error

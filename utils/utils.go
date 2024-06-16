@@ -107,7 +107,7 @@ func ComList[T any](list []T, option Option) ([]T, error) {
 	}
 	//图片列表排序
 	if option.Sort == "" {
-		option.Sort = "id desc" //默认按ID降序排列(即最新的排在前面)
+		option.Sort = "createdAt desc" //默认按创建时间降序排列(即最新的排在前面)
 	}
 	//总的条数
 	count := DB.Select("id").Find(&list).RowsAffected

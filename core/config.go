@@ -1,6 +1,7 @@
 package core
 
 import (
+	"io/fs"
 	"log"
 	"os"
 
@@ -9,9 +10,10 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+const configFile = "config.yaml"
+
 // 读取配置文件
-func InitConfig(){
-	const configFile = "config.yaml"
+func InitConfig() {
 	c := &config.Config{}
 	ConfigData, err := os.ReadFile(configFile)
 	if err != nil {
@@ -24,4 +26,18 @@ func InitConfig(){
 	log.Print("配置初始化成功")
 	// 全局变量存储配置信息
 	global.GVB_CONFIG = c
+}
+
+/* 修改配置文件 */
+func UpdateYaml() error {
+	byteData, err := yaml.Marshal(global.GVB_CONFIG)
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile(configFile, byteData, fs.ModePerm)
+	if err != nil {
+		return err
+	}
+	global.GVB_LOGGER.Info("配置文件修改成功")
+	return nil
 }

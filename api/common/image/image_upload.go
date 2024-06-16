@@ -1,7 +1,9 @@
 package image
 
 import (
+	"errors"
 	"fmt"
+	"github.com/Jaynxe/xie-blog/utils/errhandle"
 
 	"github.com/Jaynxe/xie-blog/global"
 	"github.com/Jaynxe/xie-blog/model"
@@ -9,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 文件上传 godoc
+// UploadFile 文件上传 godoc
 // @Summary 文件上传
 // @Schemes
 // @Description 文件上传
@@ -17,7 +19,7 @@ import (
 // @Accept json
 // @Produce json
 // @Param   Authorization    header    string  true   "登录返回的Token"
-// @Param   uploadfile  formData   file  true  "要上传的文件"
+// @Param   uploadFile  formData   file  true  "要上传的文件"
 // @Success 200 {object} model.CommonResponse[[]model.ImageResponse]
 // @Failure 400  {object} model.CommonResponse[any]
 // @Router /authrequired/uploadImages [post]
@@ -32,7 +34,7 @@ func (i *Image) UploadFile(c *gin.Context) {
 	// 获取所有图片
 	files := form.File["files"]
 	if files == nil {
-		model.ThrowWithMsg(c, "上传的内容为空")
+		model.Throw(c, errhandle.ParamsError)
 		return
 	}
 
@@ -51,7 +53,7 @@ func (i *Image) UploadFile(c *gin.Context) {
 		count++
 	}
 	if count == 0 {
-		model.ThrowWithMsg(c, "所有图片上传失败")
+		model.ThrowError(c, errors.New("所有图片上传失败"))
 	} else {
 		model.OKWithMsg(c, resList, fmt.Sprintf("%d张图片上传成功", count))
 	}

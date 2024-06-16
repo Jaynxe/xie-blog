@@ -9,6 +9,7 @@ import (
 	"github.com/Jaynxe/xie-blog/api/auth"
 	"github.com/Jaynxe/xie-blog/api/common/image"
 	"github.com/Jaynxe/xie-blog/api/common/menu"
+	"github.com/Jaynxe/xie-blog/api/common/site"
 	"github.com/Jaynxe/xie-blog/api/common/tag"
 	"github.com/Jaynxe/xie-blog/api/user"
 	"github.com/Jaynxe/xie-blog/routes"
@@ -29,10 +30,11 @@ func initModules() []routes.Routes {
 		menu.New(),
 		user.New(),
 		tag.New(),
+		site.New(),
 	}
 }
 
-// 创建服务
+// NewServer 创建服务
 func NewServer() *Server {
 	s := &Server{
 		routes: initModules(),

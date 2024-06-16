@@ -3,8 +3,8 @@ package user
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
-
 	"github.com/Jaynxe/xie-blog/global"
 	"github.com/Jaynxe/xie-blog/model"
 	"github.com/Jaynxe/xie-blog/utils"
@@ -19,11 +19,7 @@ var (
 	cb = context.Background()
 )
 
-func (u *User) UserInfo(c *gin.Context) {
-
-}
-
-// 用户注销 godoc
+// Logout 用户注销 godoc
 // @Summary 用户注销
 // @Schemes
 // @Description 用户注销
@@ -50,7 +46,7 @@ func (u *User) Logout(c *gin.Context) {
 
 }
 
-// 用户删除 godoc
+// DeleteUser 用户删除 godoc
 // @Summary 用户删除
 // @Schemes
 // @Description 用户删除
@@ -89,7 +85,7 @@ func (u *User) DeleteUser(c *gin.Context) {
 	model.OK(c, "删除用户成功")
 }
 
-// 修改用户密码 godoc
+// ModifyUserPassword 修改用户密码 godoc
 // @Summary 修改用户密码
 // @Schemes
 // @Description 修改用户密码
@@ -113,7 +109,11 @@ func (u *User) ModifyUserPassword(c *gin.Context) {
 		return
 	}
 	var req model.ModifyPasswordRequest
-	json.Unmarshal(b, &req)
+	err = json.Unmarshal(b, &req)
+	if err != nil {
+		model.ThrowError(c, err)
+		return
+	}
 
 	var user model.User
 	err = global.GVB_DB.Take(&user, req.UserID).Error
@@ -158,7 +158,7 @@ func (u *User) ModifyUserPassword(c *gin.Context) {
 	model.OK(c, "密码修改成功")
 }
 
-// 修改用户信息 godoc
+// ModifyUser 修改用户信息 godoc
 // @Summary 修改用户信息
 // @Schemes
 // @Description 修改用户信息
@@ -177,7 +177,11 @@ func (u *User) ModifyUser(c *gin.Context) {
 		return
 	}
 	var req model.ModifyUserRequest
-	json.Unmarshal(b, &req)
+	err = json.Unmarshal(b, &req)
+	if err != nil {
+		model.ThrowError(c, err)
+		return
+	}
 
 	var user model.User
 	err = global.GVB_DB.Table("users").
@@ -197,7 +201,7 @@ func (u *User) ModifyUser(c *gin.Context) {
 	model.OK[any](c, nil)
 }
 
-// 获取当前用户信息 godoc
+// GetUserInfo 获取当前用户信息 godoc
 // @Summary 获取当前用户信息
 // @Schemes
 // @Description 获取当前用户信息
@@ -211,15 +215,17 @@ func (u *User) ModifyUser(c *gin.Context) {
 func (u *User) GetUserInfo(c *gin.Context) {
 	info, ok := c.Get("info")
 	if !ok {
-		model.ThrowWithMsg(c, "获取token中的用户信息失败")
+		global.GVB_LOGGER.Error("获取token中的用户信息失败")
+		model.ThrowError(c, errors.New("获取token中的用户信息失败"))
 		return
 	}
-	userInfo := info.(*model.UserInfo)
-	var user model.User
-	err := global.GVB_DB.Omit("password").First(&user, userInfo.UserID).Error
+	ur := info.(*model.UserInfo)
+	var userInfo model.GetUserResponse
+	err := global.GVB_DB.Model(&model.User{}).First(&userInfo, ur.UserID).Error
 	if err != nil {
+		global.GVB_LOGGER.Error(err.Error())
 		model.ThrowError(c, err)
 		return
 	}
-	model.OKWithMsg(c, user, fmt.Sprintf("获取用户[%s]信息成功", userInfo.Name))
+	model.OKWithMsg(c, userInfo, fmt.Sprintf("获取用户[%s]信息成功", userInfo.Name))
 }

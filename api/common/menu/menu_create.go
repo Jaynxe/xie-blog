@@ -1,13 +1,15 @@
 package menu
+
 import (
 	"fmt"
+	"github.com/Jaynxe/xie-blog/utils/errhandle"
 
 	"github.com/Jaynxe/xie-blog/global"
 	"github.com/Jaynxe/xie-blog/model"
 	"github.com/gin-gonic/gin"
 )
 
-// 创建菜单 godoc
+// MenuCreate 创建菜单 godoc
 // @Summary 创建菜单
 // @Schemes
 // @Description 创建菜单
@@ -29,7 +31,7 @@ func (m *Menu) MenuCreate(c *gin.Context) {
 	var menuList []model.MenuItem
 	count := global.GVB_DB.Find(&menuList, "title = ? and url = ?", mr.Title, mr.URL).RowsAffected
 	if count > 0 {
-		model.ThrowWithMsg(c, fmt.Sprintf("菜单[%s]已存在", mr.Title))
+		model.Throw(c, errhandle.MenuExists)
 		return
 	}
 	err = global.GVB_DB.Table("menu_items").Create(&mr).Error
@@ -38,5 +40,5 @@ func (m *Menu) MenuCreate(c *gin.Context) {
 		model.ThrowError(c, err)
 		return
 	}
-	model.OKWithMsg(c, "", fmt.Sprintf("添加菜单[%s]成功", mr.Title))
+	model.OK(c, fmt.Sprintf("添加菜单[%s]成功", mr.Title))
 }

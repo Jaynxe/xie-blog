@@ -2,6 +2,7 @@ package tag
 
 import (
 	"fmt"
+	"github.com/Jaynxe/xie-blog/utils/errhandle"
 
 	"github.com/Jaynxe/xie-blog/global"
 	"github.com/Jaynxe/xie-blog/model"
@@ -9,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 更新指定标签 godoc
+// TagUpdate 更新指定标签 godoc
 // @Summary 更新指定标签
 // @Schemes
 // @Description 更新指定标签
@@ -22,7 +23,7 @@ import (
 // @Success 200 {object} model.CommonResponse[string]
 // @Failure 400  {object} model.CommonResponse[any]
 // @Router /authrequired/updateTag/{id} [patch]
-func (m *Tag) TagUpdate(c *gin.Context) {
+func (t *Tag) TagUpdate(c *gin.Context) {
 	id := c.Param("id")
 	var mr model.TagRequest
 	err := c.ShouldBindJSON(&mr)
@@ -35,7 +36,7 @@ func (m *Tag) TagUpdate(c *gin.Context) {
 	count := global.GVB_DB.Limit(1).Find(&Tag, id).RowsAffected
 	oldTitle := Tag.Name
 	if count == 0 {
-		model.ThrowWithMsg(c, fmt.Sprintf("标签[%s]不存在", mr.Name))
+		model.Throw(c, errhandle.TagNotExists)
 		return
 	}
 

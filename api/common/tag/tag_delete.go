@@ -2,13 +2,14 @@ package tag
 
 import (
 	"fmt"
+	"github.com/Jaynxe/xie-blog/utils/errhandle"
 
 	"github.com/Jaynxe/xie-blog/global"
 	"github.com/Jaynxe/xie-blog/model"
 	"github.com/gin-gonic/gin"
 )
 
-// 删除标签 godoc
+// TagDelete 删除标签 godoc
 // @Summary 删除标签
 // @Schemes
 // @Description 删除标签
@@ -20,7 +21,7 @@ import (
 // @Success 200 {object} model.CommonResponse[string]
 // @Failure 400  {object} model.CommonResponse[any]
 // @Router /authrequired/deleteTag [delete]
-func (m *Tag) TagDelete(c *gin.Context) {
+func (t *Tag) TagDelete(c *gin.Context) {
 	var md model.DelIdListRequest
 	err := c.ShouldBindJSON(&md)
 	if err != nil {
@@ -31,7 +32,7 @@ func (m *Tag) TagDelete(c *gin.Context) {
 	//根据id列表查找要删除的数据
 	affectedNum := global.GVB_DB.Find(&TagList, md.IdList).RowsAffected
 	if affectedNum == 0 {
-		model.ThrowWithMsg(c, "标签不存在")
+		model.Throw(c, errhandle.TagNotExists)
 		return
 	}
 	// TODO:如果有该标签的文章就不给删除

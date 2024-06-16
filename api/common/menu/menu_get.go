@@ -1,11 +1,13 @@
 package menu
+
 import (
 	"github.com/Jaynxe/xie-blog/global"
 	"github.com/Jaynxe/xie-blog/model"
+	"github.com/Jaynxe/xie-blog/utils/errhandle"
 	"github.com/gin-gonic/gin"
 )
 
-// 获取指定菜单 godoc
+// GetMenu 获取指定菜单 godoc
 // @Summary 获取指定菜单
 // @Schemes
 // @Description 获取指定菜单
@@ -22,7 +24,7 @@ func (m *Menu) GetMenu(c *gin.Context) {
 	var menu model.MenuItem
 	err := global.GVB_DB.Limit(1).Find(&menu, id).Error
 	if err != nil {
-		model.ThrowWithMsg(c, "菜单不存在")
+		model.Throw(c, errhandle.MenuNotExists)
 		return
 	}
 	model.OKWithMsg(c, menu, "菜单查询成功")

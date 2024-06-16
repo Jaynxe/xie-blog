@@ -18,9 +18,11 @@
 # vendor/
 
 # Go workspace file
+.idea
 go.work
 go.work.sum
 log
-.air.toml
 test
 uploads
+tmp
+.air.toml

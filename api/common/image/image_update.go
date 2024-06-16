@@ -1,13 +1,16 @@
 package image
+
 import (
+	"errors"
 	"fmt"
+	"github.com/Jaynxe/xie-blog/utils/errhandle"
 
 	"github.com/Jaynxe/xie-blog/global"
 	"github.com/Jaynxe/xie-blog/model"
 	"github.com/gin-gonic/gin"
 )
 
-// 更新图片名称 godoc
+// ImageUpdate 更新图片名称 godoc
 // @Summary 更新图片名称
 // @Schemes
 // @Description 更新图片名称
@@ -30,14 +33,14 @@ func (i *Image) ImageUpdate(c *gin.Context) {
 	var Image model.Image
 	err = global.GVB_DB.First(&Image, iu.ID).Error
 	if err != nil {
-		model.ThrowWithMsg(c, "该图片不存在")
+		model.Throw(c, errhandle.ImageNotExists)
 		return
 	}
 	name := Image.Name
 
 	err = global.GVB_DB.Model(&Image).Update("name", iu.Name).Error
 	if err != nil {
-		model.ThrowWithMsg(c, "图片名称修改失败")
+		model.ThrowError(c, errors.New("图片名称修改失败"))
 		return
 	}
 	model.OK(c, fmt.Sprintf("图片名称从%s修改为%s", name, iu.Name))

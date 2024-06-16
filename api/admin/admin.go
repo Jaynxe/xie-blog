@@ -16,24 +16,24 @@ func New() routes.Routes {
 	return &Admin{}
 }
 
-func (a *Admin) Close() error {
+func (ad *Admin) Close() error {
 	return nil
 }
 
-func (a *Admin) InitRoute(g *gin.RouterGroup) {
+func (ad *Admin) InitRoute(g *gin.RouterGroup) {
 
 	admin := g.Group("/admin")
 
-	admin.POST("/admin/new", a.RegisterAdmin)
+	admin.POST("/admin/new", ad.RegisterAdmin)
 
-	admin.GET("/paginatedUsers", a.GetPaginatedUsers)
-	admin.GET("/getAllUsers", a.GetAllUsers)
+	admin.GET("/paginatedUsers", ad.GetPaginatedUsers)
+	admin.GET("/getAllUsers", ad.GetAllUsers)
 
-	admin.PATCH("/modifyAdmin", a.ModifyAdmin)
-	admin.PATCH("/modifyUser", a.ModifyUser)
-	admin.PATCH("/modifyAdminPassword", a.ModifyAdminPassword)
-	admin.PATCH("/modifyUserPassword", a.ModifyUserPassword)
+	admin.PATCH("/modifyAdmin", ad.ModifyAdmin)
+	admin.PATCH("/modifyUser", ad.ModifyUser)
+	admin.PATCH("/modifyAdminPassword", ad.ModifyAdminPassword)
+	admin.PATCH("/modifyUserPassword", ad.ModifyUserPassword)
 
-	admin.DELETE("/deleteUser", a.DeleteUser)
-	admin.DELETE("/deleteAdmin",a.DeleteAdmin)
+	admin.DELETE("/deleteUser", ad.DeleteUser)
+	admin.DELETE("/deleteAdmin", ad.DeleteAdmin)
 }

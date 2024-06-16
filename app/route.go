@@ -3,8 +3,8 @@ package app
 import (
 	"net/http"
 
-	"github.com/Jaynxe/xie-blog/global"
 	docs "github.com/Jaynxe/xie-blog/docs"
+	"github.com/Jaynxe/xie-blog/global"
 	"github.com/Jaynxe/xie-blog/middleware"
 	"github.com/Jaynxe/xie-blog/routes"
 	"github.com/gin-gonic/gin"
@@ -12,7 +12,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func (s *Server) initAuthRequiedRoutes(g *gin.RouterGroup) {
+func (s *Server) initAuthRequiredRoutes(g *gin.RouterGroup) {
 	for _, r := range s.routes {
 		r.InitRoute(g)
 	}
@@ -45,7 +45,7 @@ func (s *Server) dispatchRoute() {
 	requiredAuth := api.Group("/authrequired")
 	requiredAuth.Use(middleware.UseTokenVerify())
 	// 初始化需要授权的api
-	s.initAuthRequiedRoutes(requiredAuth)
+	s.initAuthRequiredRoutes(requiredAuth)
 
 	// 启动服务器
 	s.setupHTTPServer(e)
@@ -59,7 +59,12 @@ func (s *Server) setupHTTPServer(e *gin.Engine) {
 		Handler: e,
 	}
 
-	go s.srv.ListenAndServe()
+	go func() {
+		err := s.srv.ListenAndServe()
+		if err != nil {
+
+		}
+	}()
 
 	global.GVB_LOGGER.Infof("HTTP Server Starts At %s", s.srv.Addr)
 

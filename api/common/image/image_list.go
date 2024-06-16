@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 获取所有图片 godoc
+// GetAllImages 获取所有图片 godoc
 // @Summary 获取所有图片
 // @Schemes
 // @Description 获取所有图片
@@ -28,7 +28,7 @@ func (i *Image) GetAllImages(c *gin.Context) {
 	model.OKWithMsg(c, imageList, "查询成功")
 }
 
-// 分页获取图片 godoc
+// GetPaginatedImages 分页获取图片 godoc
 // @Summary 分页获取图片
 // @Schemes
 // @Description 分页获取图片

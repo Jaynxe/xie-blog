@@ -1,13 +1,15 @@
 package tag
+
 import (
 	"fmt"
+	"github.com/Jaynxe/xie-blog/utils/errhandle"
 
 	"github.com/Jaynxe/xie-blog/global"
 	"github.com/Jaynxe/xie-blog/model"
 	"github.com/gin-gonic/gin"
 )
 
-// 创建标签 godoc
+// TagCreate 创建标签 godoc
 // @Summary 创建标签
 // @Schemes
 // @Description 创建标签
@@ -19,7 +21,7 @@ import (
 // @Success 200 {object} model.CommonResponse[[]model.Tag]
 // @Failure 400  {object} model.CommonResponse[any]
 // @Router /authrequired/addTag [post]
-func (m *Tag) TagCreate(c *gin.Context) {
+func (t *Tag) TagCreate(c *gin.Context) {
 	var mr model.TagRequest
 	err := c.ShouldBindJSON(&mr)
 	if err != nil {
@@ -29,7 +31,7 @@ func (m *Tag) TagCreate(c *gin.Context) {
 	var TagList []model.Tag
 	count := global.GVB_DB.Find(&TagList, "title", mr.Name).RowsAffected
 	if count > 0 {
-		model.ThrowWithMsg(c, fmt.Sprintf("标签[%s]已存在", mr.Name))
+		model.Throw(c, errhandle.TagExists)
 		return
 	}
 	err = global.GVB_DB.Table("tags").Create(&mr).Error

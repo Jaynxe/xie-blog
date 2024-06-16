@@ -37,14 +37,39 @@ const (
 	// EmailFormatError 表示邮箱格式错误，用于表示邮箱字段的值不符合预期的格式。
 	EmailFormatError
 
-	// PasswordTooShort 表示密码过短，表示密码长度不符合要求。
-	PasswordTooShort
-	// 上传的文件不符合大小限制
+	// PasswordFormatError 表示密码格式不符合要求。
+	PasswordFormatError
+
+	// FileSizeTooLarge 上传的文件不符合大小限制
 	FileSizeTooLarge
-	//上传文件的类型不匹配
+
+	// FileTypeNoMatch 上传文件的类型不匹配
 	FileTypeNoMatch
-	// 验证码错误
+
+	// VerifyCodeError 验证码错误
 	VerifyCodeError
-	// 其他错误
+
+	// EmailIsDifferent 两次邮箱不一致
+	EmailIsDifferent
+
+	// MenuExists  菜单已经存在
+	MenuExists
+
+	// MenuNotExists  菜单不存在
+	MenuNotExists
+
+	// TagExists   标签已经存在
+	TagExists
+
+	// TagNotExists 标签不存在
+	TagNotExists
+
+	// ImageExists   图片已经存在
+	ImageExists
+
+	// ImageNotExists 图片不存在
+	ImageNotExists
+
+	// OtherError 其他错误
 	OtherError
 )

@@ -10,5 +10,5 @@ type Config struct {
 	QiNiu  QiNiu  `yaml:"qiniu"`
 	Email  Email  `yaml:"email"`
 	QQ     QQ     `yaml:"qq"`
+	Site   Site   `yaml:"site"`
 }
-

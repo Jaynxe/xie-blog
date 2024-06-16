@@ -1,6 +1,8 @@
 package menu
+
 import (
 	"fmt"
+	"github.com/Jaynxe/xie-blog/utils/errhandle"
 
 	"github.com/Jaynxe/xie-blog/global"
 	"github.com/Jaynxe/xie-blog/model"
@@ -8,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 更新指定菜单 godoc
+// MenuUpdate 更新指定菜单 godoc
 // @Summary 更新指定菜单
 // @Schemes
 // @Description 更新指定菜单
@@ -34,7 +36,7 @@ func (m *Menu) MenuUpdate(c *gin.Context) {
 	count := global.GVB_DB.Limit(1).Find(&menu, id).RowsAffected
 	oldTitle := menu.Title
 	if count == 0 {
-		model.ThrowWithMsg(c, fmt.Sprintf("菜单[%s]不存在", mr.Title))
+		model.Throw(c, errhandle.MenuNotExists)
 		return
 	}
 

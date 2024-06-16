@@ -4,10 +4,11 @@ import (
 	"github.com/Jaynxe/xie-blog/global"
 	"github.com/Jaynxe/xie-blog/model"
 	"github.com/Jaynxe/xie-blog/utils"
+	"github.com/Jaynxe/xie-blog/utils/errhandle"
 	"github.com/gin-gonic/gin"
 )
 
-// 获取指定标签 godoc
+// GetTag 获取指定标签 godoc
 // @Summary 获取指定标签
 // @Schemes
 // @Description 获取指定标签
@@ -19,18 +20,18 @@ import (
 // @Success 200 {object} model.CommonResponse[model.Tag]
 // @Failure 400  {object} model.CommonResponse[any]
 // @Router /authrequired/getTag/{id} [get]
-func (m *Tag) GetTag(c *gin.Context) {
+func (t *Tag) GetTag(c *gin.Context) {
 	id := c.Param("id")
 	var Tag model.Tag
 	err := global.GVB_DB.Limit(1).Find(&Tag, id).Error
 	if err != nil {
-		model.ThrowWithMsg(c, "标签不存在")
+		model.Throw(c, errhandle.TagNotExists)
 		return
 	}
 	model.OKWithMsg(c, Tag, "标签查询成功")
 }
 
-// 获取所有标签 godoc
+// GetAllTags 获取所有标签 godoc
 // @Summary 获取所有标签
 // @Schemes
 // @Description 获取所有标签
@@ -41,7 +42,7 @@ func (m *Tag) GetTag(c *gin.Context) {
 // @Success 200 {object} model.CommonResponse[[]model.Tag]
 // @Failure 400  {object} model.CommonResponse[any]
 // @Router	/authrequired/getAllTags [get]
-func (m *Tag) GetAllTags(c *gin.Context) {
+func (t *Tag) GetAllTags(c *gin.Context) {
 	var ml []model.Tag
 	err := global.GVB_DB.Find(&ml).Error
 	if err != nil {
@@ -52,7 +53,7 @@ func (m *Tag) GetAllTags(c *gin.Context) {
 	model.OKWithMsg(c, ml, "标签查询成功")
 }
 
-// 分页获取标签 godoc
+// GetPaginatedTags 分页获取标签 godoc
 // @Summary 分页获取标签
 // @Schemes
 // @Description 分页获取标签
@@ -67,7 +68,7 @@ func (m *Tag) GetAllTags(c *gin.Context) {
 // @Success 200 {object} model.CommonResponse[[]model.Tag]
 // @Failure 400  {object} model.CommonResponse[any]
 // @Router /authrequired/paginatedTags [get]
-func (i *Tag) GetPaginatedTags(c *gin.Context) {
+func (t *Tag) GetPaginatedTags(c *gin.Context) {
 	var page model.PageRequest
 	err := c.ShouldBindQuery(&page)
 	if err != nil {

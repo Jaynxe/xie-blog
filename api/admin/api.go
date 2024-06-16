@@ -21,7 +21,7 @@ var (
 	cb = context.Background()
 )
 
-/* ------------用户注册-------- */
+// RegisterAdmin /* ------------用户注册-------- */
 // 注册管理员 godoc
 // @Summary 注册管理员
 // @Schemes
@@ -34,14 +34,18 @@ var (
 // @Success 200 {object} model.CommonResponse[any]
 // @Failure 400  {object} model.CommonResponse[any]
 // @Router /authrequired/admin/admin/new [post]
-func (a *Admin) RegisterAdmin(c *gin.Context) {
+func (ad *Admin) RegisterAdmin(c *gin.Context) {
 	b, err := c.GetRawData()
 	if err != nil {
 		model.ThrowError(c, err)
 		return
 	}
 	var req model.RegisterUserRequest
-	json.Unmarshal(b, &req)
+	err = json.Unmarshal(b, &req)
+	if err != nil {
+		model.ThrowError(c, err)
+		return
+	}
 
 	if _, err := mail.ParseAddress(req.Email); err != nil {
 		model.Throw(c, errhandle.EmailFormatError)
@@ -52,7 +56,7 @@ func (a *Admin) RegisterAdmin(c *gin.Context) {
 		return
 	}
 	if !utils.IsValidPassword(req.Password) {
-		model.Throw(c, errhandle.PasswordTooShort)
+		model.Throw(c, errhandle.PasswordFormatError)
 		return
 	}
 
@@ -83,7 +87,7 @@ func (a *Admin) RegisterAdmin(c *gin.Context) {
 
 /* ------------获取用户信息-------- */
 
-// 分页获取用户 godoc
+// GetPaginatedUsers 分页获取用户 godoc
 // @Summary 分页获取用户
 // @Schemes
 // @Description 分页获取用户
@@ -98,14 +102,14 @@ func (a *Admin) RegisterAdmin(c *gin.Context) {
 // @Success 200 {object} model.CommonResponse[[]model.User]
 // @Failure 400  {object} model.CommonResponse[any]
 // @Router /authrequired/admin/paginatedUsers [get]
-func (a *Admin) GetPaginatedUsers(c *gin.Context) {
+func (ad *Admin) GetPaginatedUsers(c *gin.Context) {
 	var page model.PageRequest
 	err := c.ShouldBindQuery(&page)
 	if err != nil {
 		model.ThrowError(c, err)
 		return
 	}
-	UserList := []model.User{}
+	UserList := make([]model.User, 10)
 	UserList, err = utils.ComList(UserList, utils.Option{PageRequest: page, Debug: false})
 	if err != nil {
 		global.GVB_LOGGER.Error(err.Error())
@@ -115,7 +119,7 @@ func (a *Admin) GetPaginatedUsers(c *gin.Context) {
 	model.OKWithMsg(c, UserList, "查询用户列表成功")
 }
 
-// 获取所有用户 godoc
+// GetAllUsers 获取所有用户 godoc
 // @Summary 获取所有用户
 // @Schemes
 // @Description 获取所有用户
@@ -126,7 +130,7 @@ func (a *Admin) GetPaginatedUsers(c *gin.Context) {
 // @Success 200 {object} model.CommonResponse[[]model.User]
 // @Failure 400  {object} model.CommonResponse[any]
 // @Router /authrequired/admin/getAllUsers [get]
-func (a *Admin) GetAllUsers(c *gin.Context) {
+func (ad *Admin) GetAllUsers(c *gin.Context) {
 	var UserList []model.User
 	if err := global.GVB_DB.Find(&UserList).Error; err != nil {
 		global.GVB_LOGGER.Error("获取用户列表失败")
@@ -138,7 +142,7 @@ func (a *Admin) GetAllUsers(c *gin.Context) {
 
 /* ------------修改用户信息-------- */
 
-// 修改指定管理员信息 godoc
+// ModifyAdmin 修改指定管理员信息 godoc
 // @Summary 修改指定管理员信息
 // @Schemes
 // @Description 修改指定管理员信息
@@ -150,14 +154,18 @@ func (a *Admin) GetAllUsers(c *gin.Context) {
 // @Success 200 {object} model.CommonResponse[any]
 // @Failure 400  {object} model.CommonResponse[any]
 // @Router /authrequired/admin/modifyAdmin [patch]
-func (t *Admin) ModifyAdmin(c *gin.Context) {
+func (ad *Admin) ModifyAdmin(c *gin.Context) {
 	b, err := c.GetRawData()
 	if err != nil {
 		model.ThrowError(c, err)
 		return
 	}
 	var req model.ModifyUserRequest
-	json.Unmarshal(b, &req)
+	err = json.Unmarshal(b, &req)
+	if err != nil {
+		model.ThrowError(c, err)
+		return
+	}
 
 	var user model.User
 	err = global.GVB_DB.Table("users").
@@ -177,7 +185,7 @@ func (t *Admin) ModifyAdmin(c *gin.Context) {
 	model.OK[any](c, nil)
 }
 
-// 修改指定用户信息 godoc
+// ModifyUser 修改指定用户信息 godoc
 // @Summary 修改指定用户信息
 // @Schemes
 // @Description 修改指定用户信息
@@ -189,14 +197,18 @@ func (t *Admin) ModifyAdmin(c *gin.Context) {
 // @Success 200 {object} model.CommonResponse[any]
 // @Failure 400  {object} model.CommonResponse[any]
 // @Router /authrequired/admin/modifyUser [patch]
-func (a *Admin) ModifyUser(c *gin.Context) {
+func (ad *Admin) ModifyUser(c *gin.Context) {
 	b, err := c.GetRawData()
 	if err != nil {
 		model.ThrowError(c, err)
 		return
 	}
 	var req model.ModifyUserRequest
-	json.Unmarshal(b, &req)
+	err = json.Unmarshal(b, &req)
+	if err != nil {
+		model.ThrowError(c, err)
+		return
+	}
 
 	var user model.User
 	err = global.GVB_DB.Table("users").
@@ -216,7 +228,7 @@ func (a *Admin) ModifyUser(c *gin.Context) {
 	model.OK[any](c, nil)
 }
 
-// 修改指定管理员密码 godoc
+// ModifyAdminPassword 修改指定管理员密码 godoc
 // @Summary 修改指定管理员密码
 // @Schemes
 // @Description 修改指定管理员密码
@@ -228,10 +240,10 @@ func (a *Admin) ModifyUser(c *gin.Context) {
 // @Success 200 {object} model.CommonResponse[any]
 // @Failure 400  {object} model.CommonResponse[any]
 // @Router /authrequired/admin/modifyAdminPassword [patch]
-func (t *Admin) ModifyAdminPassword(c *gin.Context) {
+func (ad *Admin) ModifyAdminPassword(c *gin.Context) {
 	info, ok := c.Get("info")
 	if !ok {
-		model.ThrowWithMsg(c, "获取上下文中的用户信息失败")
+		model.ThrowError(c, errors.New("获取上下文中的用户信息失败"))
 		return
 	}
 	userInfo := info.(*model.UserInfo)
@@ -241,7 +253,11 @@ func (t *Admin) ModifyAdminPassword(c *gin.Context) {
 		return
 	}
 	var req model.ModifyPasswordRequest
-	json.Unmarshal(b, &req)
+	err = json.Unmarshal(b, &req)
+	if err != nil {
+		model.ThrowError(c, err)
+		return
+	}
 
 	var u model.User
 	err = global.GVB_DB.Take(&u, req.UserID).Error
@@ -251,7 +267,7 @@ func (t *Admin) ModifyAdminPassword(c *gin.Context) {
 	}
 
 	if !pwd.ComparePasswords(u.Password, req.OldPwd) {
-		model.ThrowWithMsg(c, "旧密码和数据库的不一致")
+		model.ThrowError(c, errors.New("旧密码和数据库的不一致"))
 		return
 	}
 	if req.NewPwb == "" {
@@ -286,7 +302,7 @@ func (t *Admin) ModifyAdminPassword(c *gin.Context) {
 	model.OK[any](c, nil)
 }
 
-// 修改指定用户密码 godoc
+// ModifyUserPassword 修改指定用户密码 godoc
 // @Summary 修改指定用户密码
 // @Schemes
 // @Description 修改指定用户密码
@@ -298,14 +314,18 @@ func (t *Admin) ModifyAdminPassword(c *gin.Context) {
 // @Success 200 {object} model.CommonResponse[any]
 // @Failure 400  {object} model.CommonResponse[any]
 // @Router /authrequired/admin/modifyUserPassword [patch]
-func (t *Admin) ModifyUserPassword(c *gin.Context) {
+func (ad *Admin) ModifyUserPassword(c *gin.Context) {
 	b, err := c.GetRawData()
 	if err != nil {
 		model.ThrowError(c, err)
 		return
 	}
 	var req model.ModifyPasswordRequest
-	json.Unmarshal(b, &req)
+	err = json.Unmarshal(b, &req)
+	if err != nil {
+		model.ThrowError(c, err)
+		return
+	}
 
 	var user model.User
 	err = global.GVB_DB.Take(&user, req.UserID).Error
@@ -315,7 +335,7 @@ func (t *Admin) ModifyUserPassword(c *gin.Context) {
 	}
 
 	if !pwd.ComparePasswords(user.Password, req.OldPwd) {
-		model.ThrowWithMsg(c, "旧密码和数据库的不一致")
+		model.ThrowError(c, errors.New("旧密码和数据库的不一致"))
 		return
 	}
 
@@ -346,7 +366,7 @@ func (t *Admin) ModifyUserPassword(c *gin.Context) {
 	model.OK[any](c, nil)
 }
 
-/* ----------删除用户-------- */
+// DeleteAdmin /* ----------删除用户-------- */
 // 删除指定管理员 godoc
 // @Summary 删除指定管理员
 // @Schemes
@@ -359,10 +379,10 @@ func (t *Admin) ModifyUserPassword(c *gin.Context) {
 // @Success 200 {object} model.CommonResponse[any]
 // @Failure 400  {object} model.CommonResponse[any]
 // @Router /authrequired/admin/deleteAdmin [delete]
-func (t *Admin) DeleteAdmin(c *gin.Context) {
+func (ad *Admin) DeleteAdmin(c *gin.Context) {
 	info, ok := c.Get("info")
 	if !ok {
-		model.ThrowWithMsg(c, "获取上下文中的用户信息失败")
+		model.ThrowError(c, errors.New("获取上下文中的用户信息失败"))
 		return
 	}
 	userInfo := info.(*model.UserInfo)
@@ -372,7 +392,11 @@ func (t *Admin) DeleteAdmin(c *gin.Context) {
 		return
 	}
 	var req model.UserIDOnlyRequest
-	json.Unmarshal(b, &req)
+	err = json.Unmarshal(b, &req)
+	if err != nil {
+		model.ThrowError(c, err)
+		return
+	}
 
 	var u model.User
 	err = global.GVB_DB.Transaction(func(tx *gorm.DB) error {
@@ -401,7 +425,7 @@ func (t *Admin) DeleteAdmin(c *gin.Context) {
 	model.OK[any](c, nil)
 }
 
-// 删除指定用户 godoc
+// DeleteUser 删除指定用户 godoc
 // @Summary 删除指定用户
 // @Schemes
 // @Description 删除指定用户
@@ -413,14 +437,18 @@ func (t *Admin) DeleteAdmin(c *gin.Context) {
 // @Success 200 {object} model.CommonResponse[any]
 // @Failure 400  {object} model.CommonResponse[any]
 // @Router /authrequired/admin/deleteUser [delete]
-func (t *Admin) DeleteUser(c *gin.Context) {
+func (ad *Admin) DeleteUser(c *gin.Context) {
 	b, err := c.GetRawData()
 	if err != nil {
 		model.ThrowError(c, err)
 		return
 	}
 	var req model.UserIDOnlyRequest
-	json.Unmarshal(b, &req)
+	err = json.Unmarshal(b, &req)
+	if err != nil {
+		model.ThrowError(c, err)
+		return
+	}
 
 	var u model.User
 	err = global.GVB_DB.Transaction(func(tx *gorm.DB) error {

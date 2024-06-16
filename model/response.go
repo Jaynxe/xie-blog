@@ -1,6 +1,7 @@
 package model
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/Jaynxe/xie-blog/global"
@@ -33,8 +34,11 @@ type GetUserResponse struct {
 	ID       int64  `json:"id,omitempty"`
 	Name     string `json:"name,omitempty"`
 	Email    string `json:"email,omitempty"`
-	NickName string `json:"nick_name,omitempty"`
+	NickName string `gorm:"column:nickName" json:"nickName,omitempty"`
 	Sex      string `json:"sex,omitempty"`
+	Avatar   string `json:"avatar,omitempty"`
+	IP       string `json:"ip,omitempty"`
+	Role     string `json:"role,omitempty"`
 }
 type ImageResponse struct {
 	FilePath     string `json:"file_path,omitempty"`
@@ -42,7 +46,7 @@ type ImageResponse struct {
 	UploadStatus string `json:"upload_status,omitempty"`
 }
 
-// 服务器内部错误
+// ThrowError 服务器内部错误
 func ThrowError(c *gin.Context, err error) {
 	global.GVB_LOGGER.Errorln(err)
 	c.AbortWithStatusJSON(http.StatusBadRequest, CommonResponse[any]{
@@ -51,7 +55,7 @@ func ThrowError(c *gin.Context, err error) {
 	})
 }
 
-// 已知的定义错误
+// Throw 已知的定义错误
 func Throw(c *gin.Context, errCode errhandle.ErrCode) {
 	c.AbortWithStatusJSON(http.StatusBadRequest, CommonResponse[any]{
 		Status: errCode,
@@ -59,28 +63,19 @@ func Throw(c *gin.Context, errCode errhandle.ErrCode) {
 	})
 }
 
-// 返回自定义的错误字符串
-func ThrowWithMsg(c *gin.Context, msg string) {
-	c.AbortWithStatusJSON(http.StatusBadRequest, CommonResponse[any]{
-		Status: errhandle.OtherError,
-		Msg:    msg,
-	})
-}
-
-// 数据绑定错误
+// ThrowBindError 数据绑定错误
 func ThrowBindError(c *gin.Context, obj any, err error) {
 	msg := valid.GetValidMsg(err, obj)
-	ThrowWithMsg(c, msg)
+	ThrowError(c, errors.New(msg))
 }
 
-// 成功
+// OK 成功
 func OK[T any](c *gin.Context, data T) {
 	c.JSON(http.StatusOK, CommonResponse[T]{
 		Data: data,
 	})
 }
 
-// 成功并携带给定的信息
 func OKWithMsg[T any](c *gin.Context, data T, msg string) {
 	c.JSON(http.StatusOK, CommonResponse[T]{
 		Data: data,

@@ -98,7 +98,10 @@ func (a *JWTAccessGenerate) Verify(ctx context.Context, token string) (*model.Us
 
 	subject, _ := tk.Claims.GetSubject()
 	var userinfo model.UserInfo
-	json.Unmarshal([]byte(subject), &userinfo)
+	err = json.Unmarshal([]byte(subject), &userinfo)
+	if err != nil {
+		return nil, false
+	}
 
 	return &userinfo, true
 }
