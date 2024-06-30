@@ -6,8 +6,9 @@
 
 ## 简介📖
 
-这是一个基于 go 的 gin 框架构建的开源项目，旨在为开发者提供一个高效、稳定、美观的管理系统解决方案。项目采用现代化的前后端技术栈，注重代码的可维护性和开发效率。
+这是一个基于 go 的 gin 框架构建的开源项目，旨在为开发者提供一个高效、稳定、美观的管理系统解决方案。项目采用现代化的前后端技术栈，注重代码的可维护性和开发效率。 
 
+**前端项目地址**: [xie-blog-web](https://github.com/Jaynxe/xie-blog-web)
 ## 技术栈💻
  Go, Gin, GORM, JWT, Redis, CORS, Swagger, Stringer, Validator, Snowflake 算法, Logrus, 七牛云存储, Gomail
 
@@ -42,6 +43,5 @@
 
 ## 联系方式
 
-- **前端项目地址**: [xie-blog-web](https://github.com/Jaynxe/xie-blog-web)
 - **作者**: 谢安
 - **邮箱**: xjy158191@126.com
